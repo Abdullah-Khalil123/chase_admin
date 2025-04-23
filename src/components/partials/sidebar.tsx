@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/sidebar";
 
 import {
-  LayoutDashboard,
+  // LayoutDashboard,
   UserPlus,
   List,
   Banknote,
-  Shield,
+  // Shield,
   LogOut,
 } from "lucide-react";
 
