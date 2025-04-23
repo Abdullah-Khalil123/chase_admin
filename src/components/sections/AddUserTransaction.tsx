@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 // import { toast } from "@/components/ui/use-toast";
 import axiosInstance from "@/lib/axios";
 
@@ -27,6 +27,7 @@ interface TransactionFormData {
 
 const AddUserTransaction = () => {
   const router = useRouter();
+  const userID = useParams().id;
   const {
     register,
     handleSubmit,
@@ -116,6 +117,7 @@ const AddUserTransaction = () => {
               id="email"
               type="email"
               placeholder="user@example.com"
+              defaultValue={userID}
               {...register("email", {
                 required: "User email is required",
                 onBlur: (e) => handleEmailBlur(e.target.value),
@@ -177,7 +179,7 @@ const AddUserTransaction = () => {
               placeholder="0.00"
               {...register("amount", {
                 required: "Amount is required",
-                min: { value: 0.01, message: "Amount must be greater than 0" },
+                // min: { value: 0.01, message: "Amount must be greater than 0" },
               })}
               className="mt-2"
             />
@@ -241,7 +243,7 @@ const AddUserTransaction = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/transactions")}
+            onClick={() => router.push("/users/manage")}
           >
             Cancel
           </Button>

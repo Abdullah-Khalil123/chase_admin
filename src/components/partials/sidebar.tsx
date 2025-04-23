@@ -29,15 +29,15 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xl">Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/dashboard">
+                  {/* <Link href="/dashboard">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     <span>Overview</span>
-                  </Link>
+                  </Link> */}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -100,7 +100,7 @@ export function AppSidebar() {
 
         <SidebarSeparator />
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Roles</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -114,7 +114,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
 
       <SidebarFooter>
