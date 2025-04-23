@@ -45,13 +45,52 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
 
+const creditTypes = [
+  "ach_credit",
+  "ach_employee_payment",
+  "ach_vendor_payment",
+  "deposit",
+  "incoming_wire_transfer",
+  "misc_credit",
+  "refund",
+  "zelle_credit",
+];
+
+const debitTypes = [
+  "ach_debit",
+  "atm_transaction",
+  "bill_payment",
+  "card",
+  "loan_payment",
+  "misc_debit",
+  "outgoing_wire_transfer",
+  "overnight_check",
+  "tax_payment",
+  "egift_debit",
+  "zelle_debit",
+];
+
+const otherTypes = [
+  "account_transfer",
+  "adjustment_or_reversal",
+  "returned_deposit_item",
+  "checks_under_2_years",
+  "checks_over_2_years",
+];
+
+const allTransactionTypes = [
+  ...creditTypes,
+  ...debitTypes,
+  ...otherTypes,
+] as const;
+
 // Define the transaction schema
 const transactionSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Amount must be a positive number",
   }),
-  type: z.enum(["debit", "credit"]),
+  type: z.enum(allTransactionTypes as [string, ...string[]]),
   date: z.date(),
 });
 
@@ -240,8 +279,60 @@ export default function EditTransactionPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="debit">Debit</SelectItem>
-                        <SelectItem value="credit">Credit</SelectItem>
+                        <SelectItem value="ach_credit">ACH Credit</SelectItem>
+                        <SelectItem value="ach_employee_payment">
+                          ACH Employee Payment
+                        </SelectItem>
+                        <SelectItem value="ach_vendor_payment">
+                          ACH Vendor Payment
+                        </SelectItem>
+                        <SelectItem value="deposit">Deposit</SelectItem>
+                        <SelectItem value="incoming_wire_transfer">
+                          Incoming Wire Transfer
+                        </SelectItem>
+                        <SelectItem value="misc_credit">Misc Credit</SelectItem>
+                        <SelectItem value="refund">Refund</SelectItem>
+                        <SelectItem value="zelle_credit">
+                          Zelle Credit
+                        </SelectItem>
+
+                        <SelectItem value="ach_debit">ACH Debit</SelectItem>
+                        <SelectItem value="atm_transaction">
+                          ATM Transaction
+                        </SelectItem>
+                        <SelectItem value="bill_payment">
+                          Bill Payment
+                        </SelectItem>
+                        <SelectItem value="card">Card</SelectItem>
+                        <SelectItem value="loan_payment">
+                          Loan Payment
+                        </SelectItem>
+                        <SelectItem value="misc_debit">Misc Debit</SelectItem>
+                        <SelectItem value="outgoing_wire_transfer">
+                          Outgoing Wire Transfer
+                        </SelectItem>
+                        <SelectItem value="overnight_check">
+                          Overnight Check
+                        </SelectItem>
+                        <SelectItem value="tax_payment">Tax Payment</SelectItem>
+                        <SelectItem value="egift_debit">eGift Debit</SelectItem>
+                        <SelectItem value="zelle_debit">Zelle Debit</SelectItem>
+
+                        <SelectItem value="account_transfer">
+                          Account Transfer
+                        </SelectItem>
+                        <SelectItem value="adjustment_or_reversal">
+                          Adjustment or Reversal
+                        </SelectItem>
+                        <SelectItem value="returned_deposit_item">
+                          Returned Deposit Item
+                        </SelectItem>
+                        <SelectItem value="checks_under_2_years">
+                          Checks Under 2 Years
+                        </SelectItem>
+                        <SelectItem value="checks_over_2_years">
+                          Checks Over 2 Years
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
