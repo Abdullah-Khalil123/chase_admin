@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox"; // Added Checkbox import
 import { useRouter, useParams } from "next/navigation";
 // import { toast } from "@/components/ui/use-toast";
 import axiosInstance from "@/lib/axios";
+import { toast } from "sonner";
 
 interface TransactionFormData {
   email: string;
@@ -23,42 +25,48 @@ interface TransactionFormData {
   description: string;
   amount: string;
   date: string;
+  isReceiving: boolean; // Added isReceiving field
 }
 
 const AddUserTransaction = () => {
   const router = useRouter();
-  const userID = useParams().id;
+  const userEmail = useParams().id;
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<TransactionFormData>();
+  } = useForm<TransactionFormData>({
+    defaultValues: {
+      isReceiving: true, // Default to receiving transaction
+    },
+  });
   const [currentBalance, setCurrentBalance] = useState<number | null>(null);
   const [updatedBalance, setUpdatedBalance] = useState<number | null>(null);
 
-  // Watch amount and type changes to calculate updated balance
+  // Watch amount, type and isReceiving changes to calculate updated balance
   const amount = watch("amount");
   const type = watch("type");
+  const isReceiving = watch("isReceiving");
 
-  // Calculate updated balance when amount or type changes
+  // Calculate updated balance when amount, type or isReceiving changes
   React.useEffect(() => {
     if (currentBalance !== null && amount) {
       const amountNum = parseFloat(amount);
       let newBalance = currentBalance;
 
-      if (type === "credit" || type === "ach" || type === "wire") {
+      if (isReceiving) {
+        // If receiving money, add to balance
         newBalance += amountNum;
-      } else if (type === "debit" || type === "fee") {
+      } else {
+        // If sending money, subtract from balance
         newBalance -= amountNum;
-      } else if (type === "other") {
-        newBalance += amountNum;
       }
 
       setUpdatedBalance(newBalance);
     }
-  }, [amount, type, currentBalance]);
+  }, [amount, type, currentBalance, isReceiving]);
 
   // Fetch user balance when email changes
   const handleEmailBlur = async (email: string) => {
@@ -72,29 +80,27 @@ const AddUserTransaction = () => {
       console.error("Error fetching user balance:", error);
       setCurrentBalance(null);
       setUpdatedBalance(null);
-      // toast({
-      //   variant: "destructive",
-      //   title: "Error",
-      //   description: "User not found with this email",
-      // });
     }
   };
 
   const onSubmit = async (data: TransactionFormData) => {
     try {
-      await axiosInstance.post("/transactions", {
+      // Determine if amount should be positive or negative based on isReceiving
+      const adjustedAmount = !data.isReceiving
+        ? Math.abs(parseFloat(data.amount)).toString()
+        : (-Math.abs(parseFloat(data.amount))).toString();
+
+      const response = await axiosInstance.post("/transactions", {
         email: data.email,
         description: data.description,
-        amount: data.amount,
+        amount: adjustedAmount,
         type: data.type,
         date: data.date,
+        isReceiving: data.isReceiving,
       });
 
-      // toast({
-      //   title: "Success",
-      //   description: "Transaction created successfully",
-      // });
-      // router.push("/transactions");
+      toast("Transaction created successfully");
+      router.push(`/users/${response.data.data.transaction.userId}`); // Redirect to user details page
     } catch (error) {
       console.error("Error creating transaction:", error);
       // toast({
@@ -117,7 +123,7 @@ const AddUserTransaction = () => {
               id="email"
               type="email"
               placeholder="user@example.com"
-              defaultValue={userID}
+              defaultValue={userEmail}
               {...register("email", {
                 required: "User email is required",
                 onBlur: (e) => handleEmailBlur(e.target.value),
@@ -143,6 +149,20 @@ const AddUserTransaction = () => {
             {errors.date && (
               <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
             )}
+          </div>
+
+          {/* Transaction Direction Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="isReceiving"
+              checked={isReceiving}
+              onCheckedChange={(checked) => {
+                setValue("isReceiving", checked as boolean);
+              }}
+            />
+            <Label htmlFor="isReceiving" className="font-medium cursor-pointer">
+              Send Ammount
+            </Label>
           </div>
 
           <div>
@@ -179,7 +199,7 @@ const AddUserTransaction = () => {
               placeholder="0.00"
               {...register("amount", {
                 required: "Amount is required",
-                // min: { value: 0.01, message: "Amount must be greater than 0" },
+                min: { value: 0.01, message: "Amount must be greater than 0" },
               })}
               className="mt-2"
             />
