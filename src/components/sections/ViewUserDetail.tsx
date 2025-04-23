@@ -72,8 +72,20 @@ export default function UserDetailView() {
 
   // Format transaction amount with sign
   const formatAmount = (amount: number, type: string): string => {
-    const isPositive = ["credit", "ach", "wire"].includes(type.toLowerCase());
-    return `${isPositive ? "+" : "-"}${formatCurrency(Math.abs(amount))}`;
+    const isPositive = [
+      "ach_debit",
+      "atm_transaction",
+      "bill_payment",
+      "card",
+      "loan_payment",
+      "misc_debit",
+      "outgoing_wire_transfer",
+      "overnight_check",
+      "tax_payment",
+      "egift_debit",
+      "zelle_debit",
+    ].includes(type.toLowerCase());
+    return `${isPositive ? "-" : "+"}${formatCurrency(Math.abs(amount))}`;
   };
 
   useEffect(() => {
@@ -385,13 +397,26 @@ export default function UserDetailView() {
                         {transaction.description || "No description"}
                       </TableCell>
                       <TableCell className="capitalize">
-                        {transaction.type}
+                        {transaction.type
+                          .split("_")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
+                          .join(" ")}
                       </TableCell>
                       <TableCell
                         className={`text-right ${
-                          ["credit", "ach", "wire"].includes(
-                            transaction.type.toLowerCase()
-                          )
+                          [
+                            "ach_credit",
+                            "ach_employee_payment",
+                            "ach_vendor_payment",
+                            "deposit",
+                            "incoming_wire_transfer",
+                            "misc_credit",
+                            "refund",
+                            "zelle_credit",
+                          ].includes(transaction.type.toLowerCase())
                             ? "text-green-600"
                             : "text-red-600"
                         }`}

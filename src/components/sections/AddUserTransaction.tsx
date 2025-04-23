@@ -55,7 +55,10 @@ interface TransactionFormData {
 
 const AddUserTransaction = () => {
   const router = useRouter();
-  const userEmail = decodeURIComponent(useParams().id as string);
+  const userEmail =
+    decodeURIComponent(useParams().id as string) == "undefined"
+      ? ""
+      : decodeURIComponent(useParams().id as string);
   const {
     register,
     handleSubmit,
