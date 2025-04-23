@@ -20,7 +20,7 @@ import {
   // LayoutDashboard,
   UserPlus,
   List,
-  Banknote,
+  // Banknote,
   LogOut,
 } from "lucide-react";
 import Auth from "@/lib/auth";
