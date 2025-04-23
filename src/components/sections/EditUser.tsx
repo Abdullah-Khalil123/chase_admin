@@ -31,7 +31,6 @@ const EditUser = () => {
   const searchParams = useParams();
   const userId = searchParams.id;
   const [isLoading, setIsLoading] = useState(true);
-
   const {
     register,
     handleSubmit,

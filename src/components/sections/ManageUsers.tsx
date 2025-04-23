@@ -35,17 +35,17 @@ const ManageUser = () => {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState("All");
-  const [accountTypeFilter, setAccountTypeFilter] = useState("All");
+  // const [accountTypeFilter, setAccountTypeFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchField, setSearchField] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   // Get unique account types from users
-  const uniqueAccountTypes = [
-    "All",
-    ...new Set(users.map((user) => user.accountType)),
-  ];
+  // const uniqueAccountTypes = [
+  //   "All",
+  //   ...new Set(users.map((user) => user.accountType)),
+  // ];
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -94,8 +94,8 @@ const ManageUser = () => {
       (roleFilter === "User" && user.role === false);
 
     // Apply account type filter
-    const isAccountTypeMatch =
-      accountTypeFilter === "All" || user.accountType === accountTypeFilter;
+    // const isAccountTypeMatch =
+    //   accountTypeFilter === "All" || user.accountType === accountTypeFilter;
 
     // Apply search based on selected field
     let isSearchMatch = true;
@@ -119,7 +119,7 @@ const ManageUser = () => {
       }
     }
 
-    return isRoleMatch && isAccountTypeMatch && isSearchMatch;
+    return isRoleMatch && isSearchMatch;
   });
 
   const handleViewUser = (userId: number) => {
@@ -128,7 +128,7 @@ const ManageUser = () => {
 
   const handleClearFilters = () => {
     setRoleFilter("All");
-    setAccountTypeFilter("All");
+    // setAccountTypeFilter("All");
     setSearchTerm("");
     setSearchField("all");
   };
@@ -181,7 +181,7 @@ const ManageUser = () => {
             </Select>
           </div>
 
-          <div className="w-44">
+          {/* <div className="w-44">
             <label className="block text-sm font-medium mb-1">
               Account Type
             </label>
@@ -200,7 +200,7 @@ const ManageUser = () => {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           <div className="flex items-end ml-auto">
             <Button
@@ -233,7 +233,7 @@ const ManageUser = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
-                <TableHead>Account Type</TableHead>
+                {/* <TableHead>Account Type</TableHead> */}
                 <TableHead>Balance</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -249,7 +249,7 @@ const ManageUser = () => {
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.role ? <Check /> : ""}</TableCell>
-                    <TableCell>{user.accountType}</TableCell>
+                    {/* <TableCell>{user.accountType}</TableCell> */}
                     <TableCell>{user.balance}</TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Button
