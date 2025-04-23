@@ -355,11 +355,7 @@ export default function UserDetailView() {
           <div className="flex justify-between mb-4">
             <h3 className="text-lg font-medium">Recent Transactions</h3>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-              <Button size="sm">
+              <Button size="sm" onClick={() => router.push("/users/manage")}>
                 <Send className="h-4 w-4 mr-2" />
                 Send Money
               </Button>
