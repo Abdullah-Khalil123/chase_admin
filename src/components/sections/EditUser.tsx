@@ -44,7 +44,7 @@ const EditUser = () => {
       try {
         const response = await axiosInstance.get(`users/${userId}`);
         const userData = response.data.data.user;
-
+        console.log("Fetched user data:", userData);
         setValue("name", userData.name);
         setValue("username", userData.username); // Set username value
         setValue("email", userData.email);
@@ -165,6 +165,38 @@ const EditUser = () => {
             {errors.accountType && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.accountType.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              placeholder="Phone Number"
+              {...register("phone", { required: "Phone number is required" })}
+              className="mt-2"
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.phone.message}
+              </p>
+            )}
+          </div>
+
+          {/* Account Number Field */}
+          <div>
+            <Label htmlFor="accountNumber">Account Number</Label>
+            <Input
+              id="accountNumber"
+              placeholder="Account Number"
+              {...register("accountNumber", {
+                required: "Account number is required",
+              })}
+              className="mt-2"
+            />
+            {errors.accountNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.accountNumber.message}
               </p>
             )}
           </div>

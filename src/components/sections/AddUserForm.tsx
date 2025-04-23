@@ -193,6 +193,37 @@ const AddUser = () => {
           </div>
 
           <div>
+            <Label htmlFor="phone">Routing Number</Label>
+            <Input
+              id="phone"
+              {...register("phone", { required: "Phone number is required" })}
+              className="mt-2"
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.phone.message?.toString()}
+              </p>
+            )}
+          </div>
+
+          {/* Account Number Field */}
+          <div>
+            <Label htmlFor="accountNumber">Account Number</Label>
+            <Input
+              id="accountNumber"
+              {...register("accountNumber", {
+                required: "Account number is required",
+              })}
+              className="mt-2"
+            />
+            {errors.accountNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.accountNumber.message?.toString()}
+              </p>
+            )}
+          </div>
+
+          <div>
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
