@@ -135,7 +135,7 @@ export default function EditTransactionPage() {
 
       if (response.data.status === "success") {
         toast("The transaction was successfully updated.");
-        router.push("/transactions");
+        router.push("/users/manage");
       }
     } catch (error) {
       console.error("Error updating transaction:", error);
