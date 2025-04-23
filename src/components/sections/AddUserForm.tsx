@@ -21,6 +21,7 @@ interface UserFormData {
   name: string;
   email: string;
   password: string;
+  username: string;
   phone: string;
   address: string;
   accountName: string;
@@ -49,6 +50,7 @@ const AddUser = () => {
       phone: "",
       address: "",
       accountName: "",
+      username: "",
       accountNumber: "",
       accountType: "",
       role: "User",
@@ -73,6 +75,7 @@ const AddUser = () => {
     password: string;
     phone: string;
     address: string;
+    username: string;
     accountName: string;
     accountType: string;
     accountNumber: string;
@@ -93,6 +96,7 @@ const AddUser = () => {
         password: data.password,
         phone: data.phone,
         address: data.address,
+        username: data.username,
         accountName: data.accountName,
         accountType: data.accountType, // Ensure accountType is included
         accountNumber: data.accountNumber,
@@ -140,10 +144,24 @@ const AddUser = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="name">User Name</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               {...register("name", { required: "Name is required" })}
+              className="mt-2"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.name.message?.toString()}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="username">User Name</Label>
+            <Input
+              id="username"
+              {...register("username", { required: "Username is required" })}
               className="mt-2"
             />
             {errors.name && (

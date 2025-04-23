@@ -12,6 +12,7 @@ import { toast } from "sonner";
 interface UserData {
   id: string;
   name: string;
+  username: string; // Add username to the interface
   email: string;
   phone: string;
   address?: string;
@@ -21,7 +22,7 @@ interface UserData {
   role: boolean;
   balance: number;
   availableCredit: number;
-  password?: string; // Add password to the interface
+  password?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,6 +46,7 @@ const EditUser = () => {
         const userData = response.data.data.user;
 
         setValue("name", userData.name);
+        setValue("username", userData.username); // Set username value
         setValue("email", userData.email);
         setValue("phone", userData.phone);
         setValue("address", userData.address || "");
@@ -103,6 +105,21 @@ const EditUser = () => {
           </div>
 
           <div>
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              placeholder="Username"
+              {...register("username", { required: "Username is required" })}
+              className="mt-2"
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.username.message}
+              </p>
+            )}
+          </div>
+
+          <div>
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -117,31 +134,6 @@ const EditUser = () => {
               </p>
             )}
           </div>
-
-          {/* <div>
-            <Label htmlFor="phone">Phone</Label>
-            <Input
-              id="phone"
-              placeholder="Phone"
-              {...register("phone", { required: "Phone number is required" })}
-              className="mt-2"
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.phone.message}
-              </p>
-            )}
-          </div> */}
-
-          {/* <div>
-            <Label htmlFor="address">Address</Label>
-            <Input
-              id="address"
-              placeholder="Address"
-              {...register("address")}
-              className="mt-2"
-            />
-          </div> */}
 
           <div>
             <Label htmlFor="accountName">Company Name</Label>
@@ -161,7 +153,7 @@ const EditUser = () => {
           </div>
 
           <div>
-            <Label htmlFor="accountType">Account Name</Label>
+            <Label htmlFor="accountType">Account Type</Label>
             <Input
               id="accountType"
               placeholder="Account Type"
@@ -176,23 +168,6 @@ const EditUser = () => {
               </p>
             )}
           </div>
-
-          {/* <div>
-            <Label htmlFor="accountNumber">Account Number</Label>
-            <Input
-              id="accountNumber"
-              placeholder="Account Number"
-              {...register("accountNumber", {
-                required: "Account number is required",
-              })}
-              className="mt-2"
-            />
-            {errors.accountNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.accountNumber.message}
-              </p>
-            )}
-          </div> */}
 
           <div>
             <Label htmlFor="balance">Balance</Label>
