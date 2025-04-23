@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -44,6 +45,7 @@ import { toast } from "sonner";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
+import { Checkbox } from "../ui/checkbox";
 
 const creditTypes = [
   "ach_credit",
@@ -85,6 +87,7 @@ const allTransactionTypes = [
 ] as const;
 
 // Define the transaction schema
+// Update the transaction schema
 const transactionSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -92,8 +95,8 @@ const transactionSchema = z.object({
   }),
   type: z.enum(allTransactionTypes as [string, ...string[]]),
   date: z.date(),
+  isPending: z.boolean(),
 });
-
 type TransactionFormValues = z.infer<typeof transactionSchema>;
 
 type Transaction = {
@@ -104,6 +107,7 @@ type Transaction = {
   date: string;
   updatedBalance: number;
   userId: string;
+  isPending: boolean;
 };
 
 export default function EditTransactionPage() {
@@ -121,6 +125,7 @@ export default function EditTransactionPage() {
       amount: "",
       type: "debit",
       date: new Date(),
+      isPending: false,
     },
   });
 
@@ -143,6 +148,7 @@ export default function EditTransactionPage() {
             amount: transactionData.amount.toString(),
             type: transactionData.type,
             date: new Date(transactionData.date),
+            isPending: transactionData.isPending || false,
           });
         }
       } catch (error) {
@@ -169,6 +175,7 @@ export default function EditTransactionPage() {
           amount: data.amount,
           type: data.type,
           date: data.date.toISOString(),
+          isPending: data.isPending,
         }
       );
 
@@ -379,6 +386,27 @@ export default function EditTransactionPage() {
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="isPending"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Pending Transaction</FormLabel>
+                      <FormDescription>
+                        Mark this transaction as pending if it has not been
+                        fully processed.
+                      </FormDescription>
+                    </div>
                   </FormItem>
                 )}
               />

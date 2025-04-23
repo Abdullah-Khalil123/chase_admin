@@ -18,6 +18,7 @@ import { useRouter, useParams } from "next/navigation";
 // import { toast } from "@/components/ui/use-toast";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
+import { Checkbox } from "../ui/checkbox";
 
 interface TransactionFormData {
   email: string;
@@ -51,6 +52,7 @@ interface TransactionFormData {
   amount: string;
   date: string;
   isReceiving: boolean; // Added isReceiving field
+  isPending: boolean; // Added isPending field
 }
 
 const AddUserTransaction = () => {
@@ -67,6 +69,7 @@ const AddUserTransaction = () => {
   } = useForm<TransactionFormData>({
     defaultValues: {
       isReceiving: true, // Default to receiving transaction
+      isPending: false, // Default to not pending
     },
   });
   const [currentBalance, setCurrentBalance] = useState<number | null>(null);
@@ -75,6 +78,7 @@ const AddUserTransaction = () => {
   // Watch amount, type and isReceiving changes to calculate updated balance
   const amount = watch("amount");
   const type = watch("type");
+  const isPending = watch("isPending");
 
   // Calculate updated balance when amount, type or isReceiving changes
   React.useEffect(() => {
@@ -113,17 +117,14 @@ const AddUserTransaction = () => {
         type: data.type || "credit",
         date: data.date,
         // isReceiving: data.isReceiving,
+        isPending: data.isPending, // Add isPending field to the request
       });
 
       toast("Transaction created successfully");
       router.push(`/users/${response.data.data.transaction.userId}`); // Redirect to user details page
     } catch (error) {
       console.error("Error creating transaction:", error);
-      // toast({
-      //   variant: "destructive",
-      //   title: "Error",
-      //   description: error.response?.data?.message || "Failed to create transaction",
-      // });
+      toast("Failed to create transaction");
     }
   };
 
@@ -285,6 +286,20 @@ const AddUserTransaction = () => {
                 {errors.description.message}
               </p>
             )}
+          </div>
+
+          {/* Transaction Pending Status Checkbox */}
+          <div className="flex items-center space-x-2 mt-4">
+            <Checkbox
+              id="isPending"
+              onCheckedChange={(checked) => {
+                setValue("isPending", checked as boolean);
+              }}
+              {...register("isPending")}
+            />
+            <Label htmlFor="isPending" className="font-medium cursor-pointer">
+              Mark as pending transaction
+            </Label>
           </div>
 
           {currentBalance !== null && (
