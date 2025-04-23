@@ -91,7 +91,7 @@ const EditUser = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">User Name</Label>
             <Input
               id="name"
               placeholder="Full Name"
@@ -119,7 +119,7 @@ const EditUser = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <Label htmlFor="phone">Phone</Label>
             <Input
               id="phone"
@@ -132,9 +132,9 @@ const EditUser = () => {
                 {errors.phone.message}
               </p>
             )}
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <Label htmlFor="address">Address</Label>
             <Input
               id="address"
@@ -142,10 +142,10 @@ const EditUser = () => {
               {...register("address")}
               className="mt-2"
             />
-          </div>
+          </div> */}
 
           <div>
-            <Label htmlFor="accountName">Account Name</Label>
+            <Label htmlFor="accountName">Company Name</Label>
             <Input
               id="accountName"
               placeholder="Account Name"
@@ -162,7 +162,7 @@ const EditUser = () => {
           </div>
 
           <div>
-            <Label htmlFor="accountType">Account Type</Label>
+            <Label htmlFor="accountType">Account Name</Label>
             <Input
               id="accountType"
               placeholder="Account Type"
@@ -178,7 +178,7 @@ const EditUser = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <Label htmlFor="accountNumber">Account Number</Label>
             <Input
               id="accountNumber"
@@ -193,7 +193,7 @@ const EditUser = () => {
                 {errors.accountNumber.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor="balance">Balance</Label>

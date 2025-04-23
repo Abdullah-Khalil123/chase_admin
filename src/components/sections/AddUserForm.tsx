@@ -140,7 +140,7 @@ const AddUser = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">User Name</Label>
             <Input
               id="name"
               {...register("name", { required: "Name is required" })}
@@ -195,7 +195,7 @@ const AddUser = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <Label htmlFor="phone">Phone Number</Label>
             <Input
               id="phone"
@@ -207,9 +207,9 @@ const AddUser = () => {
                 {errors.phone.message?.toString()}
               </p>
             )}
-          </div>
+          </div> */}
 
-          <div className="md:col-span-2">
+          {/* <div className="md:col-span-2">
             <Label htmlFor="address">Address</Label>
             <Textarea
               id="address"
@@ -221,10 +221,10 @@ const AddUser = () => {
                 {errors.address.message?.toString()}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
-            <Label htmlFor="accountName">Account Name</Label>
+            <Label htmlFor="accountName">Company Name</Label>
             <Input
               id="accountName"
               {...register("accountName", {
@@ -239,7 +239,7 @@ const AddUser = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <Label htmlFor="accountNumber">Account Number</Label>
             <Input
               id="accountNumber"
@@ -253,9 +253,25 @@ const AddUser = () => {
                 {errors.accountNumber.message?.toString()}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
+            <Label htmlFor="accountType">Account Name</Label>
+            <Input
+              id="accountType"
+              {...register("accountType", {
+                required: "Account Type is required",
+              })}
+              className="mt-2"
+            />
+            {errors.accountNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.accountNumber.message?.toString()}
+              </p>
+            )}
+          </div>
+
+          {/* <div>
             <Label htmlFor="accountType">Account Type</Label>
             <Select
               onValueChange={(value) => {
@@ -283,7 +299,7 @@ const AddUser = () => {
                 {errors.accountType.message?.toString()}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor="role">User Role</Label>
