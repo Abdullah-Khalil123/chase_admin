@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox"; // Added Checkbox import
+// import { Checkbox } from "@/components/ui/checkbox"; // Added Checkbox import
 import { useRouter, useParams } from "next/navigation";
 // import { toast } from "@/components/ui/use-toast";
 import axiosInstance from "@/lib/axios";
@@ -48,7 +48,6 @@ const AddUserTransaction = () => {
   // Watch amount, type and isReceiving changes to calculate updated balance
   const amount = watch("amount");
   const type = watch("type");
-  const isReceiving = watch("isReceiving");
 
   // Calculate updated balance when amount, type or isReceiving changes
   React.useEffect(() => {
@@ -56,17 +55,9 @@ const AddUserTransaction = () => {
       const amountNum = parseFloat(amount);
       let newBalance = currentBalance;
 
-      if (isReceiving) {
-        // If receiving money, add to balance
-        newBalance += amountNum;
-      } else {
-        // If sending money, subtract from balance
-        newBalance -= amountNum;
-      }
-
       setUpdatedBalance(newBalance);
     }
-  }, [amount, type, currentBalance, isReceiving]);
+  }, [amount, type, currentBalance]);
 
   // Fetch user balance when email changes
   const handleEmailBlur = async (email: string) => {
@@ -86,17 +77,15 @@ const AddUserTransaction = () => {
   const onSubmit = async (data: TransactionFormData) => {
     try {
       // Determine if amount should be positive or negative based on isReceiving
-      const adjustedAmount = !data.isReceiving
-        ? Math.abs(parseFloat(data.amount)).toString()
-        : (-Math.abs(parseFloat(data.amount))).toString();
+      const adjustedAmount = data.amount;
 
       const response = await axiosInstance.post("/transactions", {
         email: data.email,
         description: data.description,
         amount: adjustedAmount,
-        type: data.type,
+        type: data.type || "credit",
         date: data.date,
-        isReceiving: data.isReceiving,
+        // isReceiving: data.isReceiving,
       });
 
       toast("Transaction created successfully");
@@ -152,7 +141,7 @@ const AddUserTransaction = () => {
           </div>
 
           {/* Transaction Direction Checkbox */}
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Checkbox
               id="isReceiving"
               checked={isReceiving}
@@ -163,10 +152,12 @@ const AddUserTransaction = () => {
             <Label htmlFor="isReceiving" className="font-medium cursor-pointer">
               Send Ammount
             </Label>
-          </div>
+          </div> */}
 
           <div>
-            <Label htmlFor="type">Transaction Type</Label>
+            <Label htmlFor="type" className="mb-2">
+              Transaction Type
+            </Label>
             <Select
               onValueChange={(value: TransactionFormData["type"]) =>
                 setValue("type", value)

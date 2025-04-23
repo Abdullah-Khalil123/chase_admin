@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { ArrowLeft, Download, Send } from "lucide-react";
 import axiosInstance from "@/lib/axios";
+import { ExternalToast, toast } from "sonner";
 
 interface Transaction {
   id: string;
@@ -153,6 +154,54 @@ export default function UserDetailView() {
       fetchTransactions();
     }
   }, [userId, currentPage]);
+
+  const handleDeleteTransaction = async (transactionId: string) => {
+    if (
+      confirm(
+        "Are you sure you want to delete this transaction? This action cannot be undone."
+      )
+    ) {
+      try {
+        const response = await axiosInstance.delete(
+          `/transactions/${transactionId}`
+        );
+
+        if (response.status === 204) {
+          toast("Transaction deleted");
+
+          // Refresh user data to get updated balance
+          const userResponse = await axiosInstance.get(`users/${userId}`);
+          if (userResponse.data.status === "success") {
+            setUserData({
+              ...userResponse.data.data.user,
+              availableBalance: formatCurrency(
+                userResponse.data.data.user.balance
+              ),
+              presentBalance: formatCurrency(
+                userResponse.data.data.user.balance
+              ),
+              availableCredit: formatCurrency(
+                userResponse.data.data.user.availableCredit || 0
+              ),
+              account: `${
+                userResponse.data.data.user.accountType
+              } (${userResponse.data.data.user.accountNumber
+                .slice(-4)
+                .padStart(
+                  userResponse.data.data.user.accountNumber.length,
+                  "*"
+                )})`,
+            });
+          }
+
+          // Refresh transactions
+        }
+      } catch (error) {
+        console.error("Error deleting transaction:", error);
+        toast("Failed to delete transaction. Please try again.");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -324,6 +373,7 @@ export default function UserDetailView() {
                     <TableHead>Type</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -349,6 +399,18 @@ export default function UserDetailView() {
                       </TableCell>
                       <TableCell className="text-right">
                         {formatCurrency(transaction.updatedBalance)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteTransaction(transaction.id)
+                          }
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Delete
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
