@@ -172,7 +172,7 @@ const ManageUser = () => {
               <SelectContent>
                 <SelectItem value="All">All Roles</SelectItem>
                 <SelectItem value="Admin">Admin</SelectItem>
-                <SelectItem value="Employee">Employee</SelectItem>
+                {/* <SelectItem value="Employee">Employee</SelectItem> */}
                 <SelectItem value="User">User</SelectItem>
               </SelectContent>
             </Select>
