@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Download, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import Link from "next/link";
