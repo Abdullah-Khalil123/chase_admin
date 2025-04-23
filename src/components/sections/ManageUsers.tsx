@@ -26,6 +26,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  username: string;
   role: boolean;
   accountType: string;
   balance: string;
@@ -57,6 +58,7 @@ const ManageUser = () => {
             name: string;
             email: string;
             role: string;
+            username: string;
             accountType: string;
             balance: string | number;
           }
@@ -66,6 +68,7 @@ const ManageUser = () => {
               id: user.id,
               name: user.name,
               email: user.email,
+              username: user.username,
               role: user.role,
               accountType: user.accountType,
               balance: `$${parseFloat(user.balance.toString()).toFixed(2)}`,
@@ -102,15 +105,15 @@ const ManageUser = () => {
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
 
-      if (searchField === "name") {
-        isSearchMatch = user.name.toLowerCase().includes(searchLower);
+      if (searchField === "username") {
+        isSearchMatch = user.username.toLowerCase().includes(searchLower);
       } else if (searchField === "email") {
         isSearchMatch = user.email.toLowerCase().includes(searchLower);
       } else if (searchField === "id") {
         isSearchMatch = user.id.toString().includes(searchLower);
       } else if (searchField === "all") {
         isSearchMatch =
-          user.name.toLowerCase().includes(searchLower) ||
+          user.username.toLowerCase().includes(searchLower) ||
           user.email.toLowerCase().includes(searchLower) ||
           user.id.toString().includes(searchLower) ||
           user.role.toString().toLowerCase().includes(searchLower) ||
@@ -230,7 +233,7 @@ const ManageUser = () => {
           <Table className="w-full">
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead>User Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 {/* <TableHead>Account Type</TableHead> */}
@@ -246,7 +249,7 @@ const ManageUser = () => {
                     className="cursor-pointer hover:bg-slate-50"
                     onClick={() => handleViewUser(user.id)}
                   >
-                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.username}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.role ? <Check /> : ""}</TableCell>
                     {/* <TableCell>{user.accountType}</TableCell> */}
