@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { ArrowLeft, Download, Send } from "lucide-react";
 import axiosInstance from "@/lib/axios";
-import { ExternalToast, toast } from "sonner";
+import { toast } from "sonner";
 
 interface Transaction {
   id: string;
@@ -407,7 +407,7 @@ export default function UserDetailView() {
                           onClick={() =>
                             handleDeleteTransaction(transaction.id)
                           }
-                          className="text-red-600 hover:text-red-800"
+                          className="text-red-600 hover:text-red-800 cursor-pointer"
                         >
                           Delete
                         </Button>
