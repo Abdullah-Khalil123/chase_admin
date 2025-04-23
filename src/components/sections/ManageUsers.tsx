@@ -265,7 +265,7 @@ const ManageUser = () => {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          router.push(`/transactions/add/${user.id}`);
+                          router.push(`/transactions/add/${user.email}`);
                         }}
                       >
                         Add Txn
