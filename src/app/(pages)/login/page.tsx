@@ -42,7 +42,7 @@ export default function LoginPage() {
       await AuthService.login(email, password);
 
       // Redirect to admin dashboard
-      router.push("/admin/dashboard");
+      router.push("/users/manage");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
