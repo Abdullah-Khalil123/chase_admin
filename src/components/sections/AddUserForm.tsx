@@ -112,7 +112,7 @@ const AddUser = () => {
       // Handle successful response
       if (response.data.status === "success") {
         // Redirect to users list or show success message
-        router.push("/users");
+        router.push("/users/manage");
       }
     } catch (error: unknown) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
