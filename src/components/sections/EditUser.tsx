@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
+import { toast } from "sonner";
 
 interface UserData {
   id: string;
@@ -20,6 +21,7 @@ interface UserData {
   role: boolean;
   balance: number;
   availableCredit: number;
+  password?: string; // Add password to the interface
   createdAt: string;
   updatedAt: string;
 }
@@ -42,7 +44,6 @@ const EditUser = () => {
       try {
         const response = await axiosInstance.get(`users/${userId}`);
         const userData = response.data.data.user;
-        // console.log(userData.data);
 
         setValue("name", userData.name);
         setValue("email", userData.email);
@@ -67,7 +68,16 @@ const EditUser = () => {
 
   const onSubmit = async (data: UserData) => {
     try {
-      await axiosInstance.patch(`/users/${userId}`, data);
+      const updatedData = { ...data };
+
+      // Only add password if it's provided
+      if (!data.password) {
+        delete updatedData.password; // Remove password field if it's empty
+      }
+
+      await axiosInstance.patch(`/users/${userId}`, updatedData);
+      toast("User updated successfully");
+      router.push("/users/manage"); // After successful update, navigate back to users list
     } catch (error) {
       console.error("Error updating user data:", error);
     }
@@ -232,6 +242,27 @@ const EditUser = () => {
               className="w-4 h-4"
             />
           </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              placeholder="New Password"
+              type="password"
+              {...register("password", {
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+              className="mt-2"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-4">
@@ -241,7 +272,7 @@ const EditUser = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/users")}
+            onClick={() => router.push("/users/manage")}
           >
             Cancel
           </Button>
