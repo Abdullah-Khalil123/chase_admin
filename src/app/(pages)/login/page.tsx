@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import AuthService from "@/lib/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await AuthService.login(email, password);
+      await AuthService.login(userName, password);
 
       // Redirect to admin dashboard
       router.push("/users/manage");
@@ -94,8 +94,8 @@ export default function LoginPage() {
                     id="username"
                     type="username"
                     placeholder="admin@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
                     className="pl-10"
                     required
                   />
