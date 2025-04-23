@@ -16,6 +16,7 @@ import {
 import { ArrowLeft, Download, Send } from "lucide-react";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface Transaction {
   id: string;
@@ -373,7 +374,7 @@ export default function UserDetailView() {
                     <TableHead>Type</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -400,7 +401,7 @@ export default function UserDetailView() {
                       <TableCell className="text-right">
                         {formatCurrency(transaction.updatedBalance)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -411,6 +412,15 @@ export default function UserDetailView() {
                         >
                           Delete
                         </Button>
+                        <Link href={`/transactions/edit/${transaction.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-green-600 hover:text-green-800 cursor-pointer"
+                          >
+                            Update
+                          </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}

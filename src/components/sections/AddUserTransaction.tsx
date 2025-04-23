@@ -52,8 +52,8 @@ const AddUserTransaction = () => {
   // Calculate updated balance when amount, type or isReceiving changes
   React.useEffect(() => {
     if (currentBalance !== null && amount) {
-      const amountNum = parseFloat(amount);
-      let newBalance = currentBalance;
+      // const amountNum = parseFloat(amount);
+      const newBalance = currentBalance;
 
       setUpdatedBalance(newBalance);
     }
