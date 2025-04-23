@@ -26,7 +26,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: string;
+  role: boolean;
   accountType: string;
   balance: string;
 }
@@ -87,8 +87,11 @@ const ManageUser = () => {
   }, []);
 
   const filteredUsers = users.filter((user) => {
-    // Apply role filter
-    const isRoleMatch = roleFilter === "All" || user.role === roleFilter;
+    // Apply role filter logic based on selection
+    const isRoleMatch =
+      roleFilter === "All" ||
+      (roleFilter === "Admin" && user.role === true) ||
+      (roleFilter === "User" && user.role === false);
 
     // Apply account type filter
     const isAccountTypeMatch =
@@ -110,7 +113,7 @@ const ManageUser = () => {
           user.name.toLowerCase().includes(searchLower) ||
           user.email.toLowerCase().includes(searchLower) ||
           user.id.toString().includes(searchLower) ||
-          user.role.toLowerCase().includes(searchLower) ||
+          user.role.toString().toLowerCase().includes(searchLower) ||
           user.accountType.toLowerCase().includes(searchLower) ||
           user.balance.toLowerCase().includes(searchLower);
       }

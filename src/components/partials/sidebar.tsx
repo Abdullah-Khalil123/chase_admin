@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import {
   Sidebar,
@@ -20,9 +21,9 @@ import {
   UserPlus,
   List,
   Banknote,
-  // Shield,
   LogOut,
 } from "lucide-react";
+import Auth from "@/lib/auth";
 
 export function AppSidebar() {
   return (
@@ -119,7 +120,11 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem
+            onClick={() => {
+              Auth.logout();
+            }}
+          >
             <SidebarMenuButton asChild>
               <Link href="/logout">
                 <LogOut className="mr-2 h-4 w-4" />
