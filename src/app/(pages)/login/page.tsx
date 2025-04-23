@@ -103,7 +103,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <Label htmlFor="password">Password</Label>
                   <a
                     href="/forgot-password"
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   >
                     Forgot password?
                   </a>
-                </div>
+                </div> */}
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
