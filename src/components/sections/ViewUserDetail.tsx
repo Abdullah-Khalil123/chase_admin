@@ -393,65 +393,68 @@ export default function UserDetailView() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell>{formatDate(transaction.date)}</TableCell>
-                      <TableCell>
-                        {transaction.description || "No description"}
-                      </TableCell>
-                      <TableCell className="capitalize">
-                        {transaction.type
-                          .split("_")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() + word.slice(1)
-                          )
-                          .join(" ")}
-                      </TableCell>
-                      <TableCell
-                        className={`text-right ${
-                          [
-                            "ach_credit",
-                            "ach_employee_payment",
-                            "ach_vendor_payment",
-                            "deposit",
-                            "incoming_wire_transfer",
-                            "misc_credit",
-                            "refund",
-                            "zelle_credit",
-                          ].includes(transaction.type.toLowerCase())
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {formatAmount(transaction.amount, transaction.type)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(transaction.updatedBalance)}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            handleDeleteTransaction(transaction.id)
-                          }
-                          className="text-red-600 hover:text-red-800 cursor-pointer"
+                  {transactions
+                    .slice()
+                    .reverse()
+                    .map((transaction) => (
+                      <TableRow key={transaction.id}>
+                        <TableCell>{formatDate(transaction.date)}</TableCell>
+                        <TableCell>
+                          {transaction.description || "No description"}
+                        </TableCell>
+                        <TableCell className="capitalize">
+                          {transaction.type
+                            .split("_")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}
+                        </TableCell>
+                        <TableCell
+                          className={`text-right ${
+                            [
+                              "ach_credit",
+                              "ach_employee_payment",
+                              "ach_vendor_payment",
+                              "deposit",
+                              "incoming_wire_transfer",
+                              "misc_credit",
+                              "refund",
+                              "zelle_credit",
+                            ].includes(transaction.type.toLowerCase())
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
                         >
-                          Delete
-                        </Button>
-                        <Link href={`/transactions/edit/${transaction.id}`}>
+                          {formatAmount(transaction.amount, transaction.type)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatCurrency(transaction.updatedBalance)}
+                        </TableCell>
+                        <TableCell className="text-center">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-green-600 hover:text-green-800 cursor-pointer"
+                            onClick={() =>
+                              handleDeleteTransaction(transaction.id)
+                            }
+                            className="text-red-600 hover:text-red-800 cursor-pointer"
                           >
-                            Update
+                            Delete
                           </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          <Link href={`/transactions/edit/${transaction.id}`}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-green-600 hover:text-green-800 cursor-pointer"
+                            >
+                              Update
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
 

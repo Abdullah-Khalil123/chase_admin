@@ -207,9 +207,10 @@ const EditUser = () => {
               id="balance"
               placeholder="Balance"
               type="number"
+              step={0.01}
               {...register("balance", {
                 required: "Balance is required",
-                valueAsNumber: true,
+                // valueAsNumber: true,
               })}
               className="mt-2"
             />
@@ -226,6 +227,7 @@ const EditUser = () => {
               id="availableCredit"
               placeholder="Available Credit"
               type="number"
+              step={0.01}
               {...register("availableCredit", {
                 required: "Available credit is required",
                 valueAsNumber: true,
