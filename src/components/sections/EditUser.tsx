@@ -91,7 +91,7 @@ const EditUser = () => {
       <h2 className="text-2xl font-bold mb-6">Edit User Details</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          {/* <div>
             <Label htmlFor="name">User Name</Label>
             <Input
               id="name"
@@ -102,7 +102,7 @@ const EditUser = () => {
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor="username">Username</Label>
@@ -153,7 +153,7 @@ const EditUser = () => {
           </div>
 
           <div>
-            <Label htmlFor="accountType">Account Type</Label>
+            <Label htmlFor="accountType">Account Name</Label>
             <Input
               id="accountType"
               placeholder="Account Type"
@@ -169,7 +169,7 @@ const EditUser = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone">Routing Number</Label>
             <Input
               id="phone"
               placeholder="Phone Number"

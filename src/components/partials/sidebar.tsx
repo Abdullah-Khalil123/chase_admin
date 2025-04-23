@@ -83,7 +83,7 @@ export function AppSidebar() {
 
         <SidebarSeparator />
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Transactions</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -97,7 +97,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
 
         <SidebarSeparator />
 

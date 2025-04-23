@@ -143,7 +143,7 @@ const AddUser = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          {/* <div>
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
@@ -155,7 +155,7 @@ const AddUser = () => {
                 {errors.name.message?.toString()}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor="username">User Name</Label>

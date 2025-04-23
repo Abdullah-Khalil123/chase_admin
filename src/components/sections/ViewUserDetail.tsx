@@ -32,6 +32,7 @@ interface UserData {
   name: string;
   email: string;
   phone?: string;
+  username: string;
   address?: string;
   account: string;
   accountType: string;
@@ -132,37 +133,36 @@ export default function UserDetailView() {
     }
   }, [userId]);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        setTransactionsLoading(true);
-        const response = await axiosInstance.get(`/transactions/${userId}`, {
-          params: { page: currentPage, limit: 10 },
-        });
+  const fetchTransactions = async () => {
+    try {
+      setTransactionsLoading(true);
+      const response = await axiosInstance.get(`/transactions/${userId}`, {
+        params: { page: currentPage, limit: 10 },
+      });
 
-        if (response.status < 200 || response.status >= 300) {
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        const result = response.data;
-        console.log("Transaction data:", result);
-
-        if (result.status === "success") {
-          setTransactions(result.data.transactions);
-          setTotalPages(result.totalPages);
-        } else {
-          throw new Error(result.message || "Failed to fetch transactions");
-        }
-      } catch (err: unknown) {
-        setTransactionsError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        console.error("Error fetching transactions:", err);
-      } finally {
-        setTransactionsLoading(false);
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Error: ${response.status}`);
       }
-    };
 
+      const result = response.data;
+      console.log("Transaction data:", result);
+
+      if (result.status === "success") {
+        setTransactions(result.data.transactions);
+        setTotalPages(result.totalPages);
+      } else {
+        throw new Error(result.message || "Failed to fetch transactions");
+      }
+    } catch (err: unknown) {
+      setTransactionsError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+      console.error("Error fetching transactions:", err);
+    } finally {
+      setTransactionsLoading(false);
+    }
+  };
+  useEffect(() => {
     if (userId) {
       fetchTransactions();
     }
@@ -205,6 +205,8 @@ export default function UserDetailView() {
                   "*"
                 )})`,
             });
+
+            fetchTransactions();
           }
 
           // Refresh transactions
@@ -292,7 +294,7 @@ export default function UserDetailView() {
 
       <Card className="mb-8">
         <CardHeader className="bg-slate-50">
-          <CardTitle>{userData.name}</CardTitle>
+          <CardTitle>{userData.username}</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -300,10 +302,10 @@ export default function UserDetailView() {
               <p className="text-sm text-muted-foreground mb-1">Account</p>
               <p className="font-medium">{userData.account}</p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-sm text-muted-foreground mb-1">User ID</p>
               <p className="font-medium">{userData.id}</p>
-            </div>
+            </div> */}
             <div>
               <p className="text-sm text-muted-foreground mb-1">
                 Available Balance
@@ -324,16 +326,16 @@ export default function UserDetailView() {
               </p>
               <p className="font-medium">{userData.availableCredit}</p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-sm text-muted-foreground mb-1">Email</p>
               <p className="font-medium">{userData.email}</p>
-            </div>
-            {userData.phone && (
+            </div> */}
+            {/* {userData.phone && (
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Phone</p>
                 <p className="font-medium">{userData.phone}</p>
               </div>
-            )}
+            )} */}
             {userData.address && (
               <div className="md:col-span-2">
                 <p className="text-sm text-muted-foreground mb-1">Address</p>
@@ -345,19 +347,24 @@ export default function UserDetailView() {
       </Card>
 
       <Tabs defaultValue="transactions" className="w-full">
-        <TabsList className="mb-4">
+        {/* <TabsList className="mb-4">
           <TabsTrigger value="transactions">Transactions</TabsTrigger>
           <TabsTrigger value="statements">Statements</TabsTrigger>
           <TabsTrigger value="settings">Account Settings</TabsTrigger>
-        </TabsList>
+        </TabsList> */}
 
         <TabsContent value="transactions">
           <div className="flex justify-between mb-4">
             <h3 className="text-lg font-medium">Recent Transactions</h3>
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => router.push("/users/manage")}>
+              <Button
+                size="sm"
+                onClick={() =>
+                  router.push("/transactions/add/" + userData.email)
+                }
+              >
                 <Send className="h-4 w-4 mr-2" />
-                Send Money
+                Add Txn
               </Button>
             </div>
           </div>
