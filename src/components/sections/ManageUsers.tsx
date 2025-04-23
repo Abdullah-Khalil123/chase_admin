@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axiosInstance from "@/lib/axios";
+import { Check } from "lucide-react";
 
 interface User {
   id: number;
@@ -244,7 +245,7 @@ const ManageUser = () => {
                   >
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{user.role ? <Check /> : ""}</TableCell>
                     <TableCell>{user.accountType}</TableCell>
                     <TableCell>{user.balance}</TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
