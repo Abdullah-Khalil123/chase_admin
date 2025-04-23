@@ -87,12 +87,12 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    id="email"
-                    type="email"
+                    id="username"
+                    type="username"
                     placeholder="admin@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

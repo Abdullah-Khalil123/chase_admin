@@ -33,10 +33,13 @@ const cookieOptions = {
 };
 
 // Login user
-const login = async (email: string, password: string): Promise<User | null> => {
+const login = async (
+  username: string,
+  password: string
+): Promise<User | null> => {
   try {
     const response = await axios.post<LoginResponse>("/auth/login", {
-      email,
+      username,
       password,
     });
 
