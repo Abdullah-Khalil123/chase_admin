@@ -93,6 +93,9 @@ const transactionSchema = z.object({
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Amount must be a positive number",
   }),
+  updatedBalance: z.string().refine((val) => !isNaN(Number(val)), {
+    message: "Balance must be a number",
+  }),
   type: z.enum(allTransactionTypes as [string, ...string[]]),
   date: z.date(),
   isPending: z.boolean(),
@@ -146,6 +149,7 @@ export default function EditTransactionPage() {
           form.reset({
             description: transactionData.description,
             amount: transactionData.amount.toString(),
+            updatedBalance: transactionData.updatedBalance.toString(),
             type: transactionData.type,
             date: new Date(transactionData.date),
             isPending: transactionData.isPending || false,
@@ -173,6 +177,7 @@ export default function EditTransactionPage() {
         {
           description: data.description,
           amount: data.amount,
+          updatedBalance: data.updatedBalance,
           type: data.type,
           date: data.date.toISOString(),
           isPending: data.isPending,
@@ -242,6 +247,25 @@ export default function EditTransactionPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="updatedBalance"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Balance</FormLabel>
                     <FormControl>
                       <Input
                         type="number"

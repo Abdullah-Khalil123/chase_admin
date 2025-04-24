@@ -13,9 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-// import { Checkbox } from "@/components/ui/checkbox"; // Added Checkbox import
 import { useRouter, useParams } from "next/navigation";
-// import { toast } from "@/components/ui/use-toast";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
@@ -51,9 +49,24 @@ interface TransactionFormData {
   description: string;
   amount: string;
   date: string;
-  isReceiving: boolean; // Added isReceiving field
-  isPending: boolean; // Added isPending field
+  isPending: boolean;
+  balance: string;
 }
+
+// Helper function to determine if a transaction type is a credit (incoming)
+const isCreditType = (type: string): boolean => {
+  const creditTypes = [
+    "ach_credit",
+    "ach_employee_payment",
+    "ach_vendor_payment",
+    "deposit",
+    "incoming_wire_transfer",
+    "misc_credit",
+    "refund",
+    "zelle_credit",
+  ];
+  return creditTypes.includes(type);
+};
 
 const AddUserTransaction = () => {
   const router = useRouter();
@@ -68,27 +81,41 @@ const AddUserTransaction = () => {
     formState: { errors, isSubmitting },
   } = useForm<TransactionFormData>({
     defaultValues: {
-      isReceiving: true, // Default to receiving transaction
-      isPending: false, // Default to not pending
+      isPending: false,
+      type: "deposit", // Set a default transaction type
     },
   });
   const [currentBalance, setCurrentBalance] = useState<number | null>(null);
   const [updatedBalance, setUpdatedBalance] = useState<number | null>(null);
 
-  // Watch amount, type and isReceiving changes to calculate updated balance
+  // Watch amount, type and isPending changes to calculate updated balance
   const amount = watch("amount");
   const type = watch("type");
   const isPending = watch("isPending");
 
-  // Calculate updated balance when amount, type or isReceiving changes
+  // Calculate updated balance when amount, type or isPending changes
   React.useEffect(() => {
     if (currentBalance !== null && amount) {
-      // const amountNum = parseFloat(amount);
-      const newBalance = currentBalance;
+      const amountNum = parseFloat(amount);
+      let newBalance = currentBalance;
+
+      // Only affect balance if transaction is not pending
+      if (!isPending) {
+        if (isCreditType(type)) {
+          // Credit increases balance
+          newBalance = currentBalance + amountNum;
+        } else if (
+          type !== "account_transfer" &&
+          type !== "adjustment_or_reversal"
+        ) {
+          // Debit decreases balance (exclude neutral transactions)
+          newBalance = currentBalance - amountNum;
+        }
+      }
 
       setUpdatedBalance(newBalance);
     }
-  }, [amount, type, currentBalance]);
+  }, [amount, type, isPending, currentBalance]);
 
   // Fetch user balance when email changes
   const handleEmailBlur = async (email: string) => {
@@ -107,21 +134,19 @@ const AddUserTransaction = () => {
 
   const onSubmit = async (data: TransactionFormData) => {
     try {
-      // Determine if amount should be positive or negative based on isReceiving
-      const adjustedAmount = data.amount;
-
+      // Create the transaction data
       const response = await axiosInstance.post("/transactions", {
         email: data.email,
         description: data.description,
-        amount: adjustedAmount,
-        type: data.type || "credit",
+        amount: data.amount,
+        type: data.type,
         date: data.date,
-        // isReceiving: data.isReceiving,
-        isPending: data.isPending, // Add isPending field to the request
+        isPending: data.isPending,
+        balance: data.balance || undefined,
       });
 
       toast("Transaction created successfully");
-      router.push(`/users/${response.data.data.transaction.userId}`); // Redirect to user details page
+      router.push(`/users/${response.data.data.transaction.userId}`);
     } catch (error) {
       console.error("Error creating transaction:", error);
       toast("Failed to create transaction");
@@ -168,20 +193,6 @@ const AddUserTransaction = () => {
             )}
           </div>
 
-          {/* Transaction Direction Checkbox */}
-          {/* <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isReceiving"
-              checked={isReceiving}
-              onCheckedChange={(checked) => {
-                setValue("isReceiving", checked as boolean);
-              }}
-            />
-            <Label htmlFor="isReceiving" className="font-medium cursor-pointer">
-              Send Ammount
-            </Label>
-          </div> */}
-
           <div>
             <Label htmlFor="type" className="mb-2">
               Transaction Type
@@ -190,7 +201,7 @@ const AddUserTransaction = () => {
               onValueChange={(value: TransactionFormData["type"]) =>
                 setValue("type", value)
               }
-              defaultValue="credit"
+              defaultValue="deposit"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select transaction type" />
@@ -267,6 +278,24 @@ const AddUserTransaction = () => {
             )}
           </div>
 
+          {/* Add this inside your grid, perhaps after amount field */}
+          <div>
+            <Label htmlFor="balance">Balance</Label>
+            <Input
+              id="balance"
+              type="number"
+              step="0.01"
+              placeholder="Balance"
+              {...register("balance", { required: "Balance is required" })}
+              className="mt-2"
+            />
+            {errors.balance && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.balance.message}
+              </p>
+            )}
+          </div>
+
           <div className="md:col-span-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -292,6 +321,7 @@ const AddUserTransaction = () => {
           <div className="flex items-center space-x-2 mt-4">
             <Checkbox
               id="isPending"
+              checked={isPending}
               onCheckedChange={(checked) => {
                 setValue("isPending", checked as boolean);
               }}
@@ -300,30 +330,39 @@ const AddUserTransaction = () => {
             <Label htmlFor="isPending" className="font-medium cursor-pointer">
               Mark as pending transaction
             </Label>
+            <div className="text-sm text-gray-500 ml-2">
+              (Pending transactions won't affect the balance)
+            </div>
           </div>
 
           {currentBalance !== null && (
-            <>
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-gray-50 rounded-md">
               <div>
                 <Label htmlFor="currentBalance">Current Balance</Label>
                 <Input
                   id="currentBalance"
-                  value={currentBalance.toFixed(2)}
+                  value={`$${currentBalance.toFixed(2)}`}
                   readOnly
                   className="mt-2"
                 />
               </div>
 
               <div>
-                <Label htmlFor="updatedBalance">Updated Balance</Label>
+                <Label htmlFor="updatedBalance">
+                  {isPending ? "Balance (Pending Ignored)" : "Updated Balance"}
+                </Label>
                 <Input
                   id="updatedBalance"
-                  value={updatedBalance?.toFixed(2) || ""}
+                  value={updatedBalance ? `$${updatedBalance.toFixed(2)}` : ""}
                   readOnly
-                  className="mt-2"
+                  className={`mt-2 ${
+                    updatedBalance !== null && updatedBalance < 0
+                      ? "text-red-500 font-medium"
+                      : ""
+                  }`}
                 />
               </div>
-            </>
+            </div>
           )}
         </div>
 
